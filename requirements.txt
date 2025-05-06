@@ -54,7 +54,6 @@ PyQt6-Qt6==6.7.3
 PyQt6_sip==13.10.0
 python-dateutil==2.9.0.post0
 pytz==2025.2
-pywin32==308
 requests==2.32.3
 rich==14.0.0
 scikit-learn==1.6.1
