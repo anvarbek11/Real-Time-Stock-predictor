@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Stock Predictor</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            padding-top: 20px;
+        }
+        .card {
+            background-color: #1e1e1e;
+            margin-bottom: 20px;
+            border: 1px solid #333;
+        }
+        .form-control, .form-select {
+            background-color: #2d2d2d;
+            color: white;
+            border: 1px solid #444;
+        }
+        .form-label {
+            color: white !important; /* Make labels white */
+            font-weight: 500; /* Slightly bolder */
+        }
+        .btn-primary {
+            background-color: #0d6efd;
+            border: none;
+        }
+        .stock-info {
+            background-color: #2a2a2a;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .stock-examples {
+            font-size: 0.85rem;
+            color: #aaa;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center mb-4">
+                <h1>Real-Time Stock Predictor</h1>
+                <p class="lead">Predict future stock prices using LSTM neural networks</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <div class="card">
+                    <div class="card-body">
+                        <form method="POST">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="stock_symbol" class="form-label">Stock Symbol</label>
+                                    <input type="text" class="form-control" id="stock_symbol" name="stock_symbol"
+                                           value="{{ stock_symbol if stock_symbol else 'TSLA' }}" required>
+                                    <div class="stock-examples">
+                                        Examples: TSLA, AAPL, MSFT, AMZN, GOOG, AEP
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="future_days" class="form-label">Days to Predict</label>
+                                    <select class="form-select" id="future_days" name="future_days">
+                                        <option value="7" {% if future_days == 7 %}selected{% endif %}>7 days</option>
+                                        <option value="30" {% if future_days == 30 or not future_days %}selected{% endif %}>30 days</option>
+                                        <option value="60" {% if future_days == 60 %}selected{% endif %}>60 days</option>
+                                        <option value="90" {% if future_days == 90 %}selected{% endif %}>90 days</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Predict</button>
+                        </form>
+                    </div>
+                </div>
+
+                {% if error %}
+                <div class="alert alert-danger mt-3">
+                    Error: {{ error }}
+                </div>
+                {% endif %}
+
+                {% if last_price %}
+                <div class="stock-info mt-3">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h4>{{ stock_symbol }}</h4>
+                            <p class="mb-1">Last Price: ${{ "%.2f"|format(last_price) }}</p>
+                            <p>Last Date: {{ last_date }}</p>
+                        </div>
+                        <div class="col-md-6 text-end">
+                            <h5>{{ future_days }}-Day Prediction</h5>
+                            <p>Using LSTM Neural Network</p>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if plot_main %}
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="plot-container">
+                            {{ plot_main|safe }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if plot_future %}
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="plot-container">
+                            {{ plot_future|safe }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if plot_tech %}
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="plot-container">
+                            {{ plot_tech|safe }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
